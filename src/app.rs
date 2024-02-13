@@ -437,12 +437,12 @@ impl App {
                             let pos = lock.network_state.selected().unwrap_or_default();
                             if let Some(network) = lock.get_network_by_pos(pos) {
                                 if let Some(api_key) =
-                                    lock.api_key_for_id(network.subtype_1.id.clone().unwrap())
+                                    lock.api_key_for_id(network.id.clone().unwrap())
                                 {
                                     let client = central_client(api_key.to_string())?;
                                     let net = crate::client::sync_get_network(
                                         client.clone(),
-                                        network.subtype_1.id.clone().unwrap(),
+                                        network.id.clone().unwrap(),
                                     )?;
 
                                     let mut tf = NamedTempFile::new()?;
@@ -460,7 +460,7 @@ impl App {
                                     if path.metadata()?.modified()? != modif {
                                         crate::client::sync_apply_network_rules(
                                             client,
-                                            network.subtype_1.id.clone().unwrap(),
+                                            network.id.clone().unwrap(),
                                             std::fs::read_to_string(path)?,
                                         )?;
                                     }

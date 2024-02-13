@@ -122,33 +122,25 @@ pub fn join_network(network_id: String) -> Result<ResponseValue<Network>, zeroti
                 .update_network(
                     &network_id,
                     &Network {
-                        subtype_0: zerotier_one_api::types::NetworkSubtype0 {
-                            allow_default: None,
-                            allow_dns: None,
-                            allow_global: None,
-                            allow_managed: None,
-                        },
-                        subtype_1: zerotier_one_api::types::NetworkSubtype1 {
-                            allow_default: None,
-                            allow_dns: None,
-                            allow_global: None,
-                            allow_managed: None,
-                            assigned_addresses: Vec::new(),
-                            bridge: None,
-                            broadcast_enabled: None,
-                            dns: None,
-                            id: None,
-                            mac: None,
-                            mtu: None,
-                            multicast_subscriptions: Vec::new(),
-                            name: None,
-                            netconf_revision: None,
-                            port_device_name: None,
-                            port_error: None,
-                            routes: Vec::new(),
-                            status: None,
-                            type_: None,
-                        },
+                        allow_default: None,
+                        allow_dns: None,
+                        allow_global: None,
+                        allow_managed: None,
+                        assigned_addresses: Vec::new(),
+                        bridge: None,
+                        broadcast_enabled: None,
+                        dns: None,
+                        id: None,
+                        mac: None,
+                        mtu: None,
+                        multicast_subscriptions: Vec::new(),
+                        name: None,
+                        netconf_revision: None,
+                        port_device_name: None,
+                        port_error: None,
+                        routes: Vec::new(),
+                        status: None,
+                        type_: None,
                     },
                 )
                 .await,
@@ -384,16 +376,16 @@ pub fn toggle_flag(id: String, flag: NetworkFlag) -> Result<ResponseValue<Networ
 
         match flag {
             NetworkFlag::AllowDNS => {
-                true_or_none!(network.subtype_0.allow_dns);
+                true_or_none!(network.allow_dns);
             }
             NetworkFlag::AllowGlobal => {
-                true_or_none!(network.subtype_0.allow_global);
+                true_or_none!(network.allow_global);
             }
             NetworkFlag::AllowManaged => {
-                true_or_none!(network.subtype_0.allow_managed);
+                true_or_none!(network.allow_managed);
             }
             NetworkFlag::AllowDefault => {
-                true_or_none!(network.subtype_0.allow_default);
+                true_or_none!(network.allow_default);
             }
         }
 

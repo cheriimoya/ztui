@@ -28,12 +28,11 @@ fn template_network(s: Option<&String>, network: &Network) -> Option<String> {
     Some(
         s.clone()
             .unwrap()
-            .replace("%i", &network.subtype_1.port_device_name.clone().unwrap())
-            .replace("%n", &network.subtype_1.id.clone().unwrap())
+            .replace("%i", &network.port_device_name.clone().unwrap())
+            .replace("%n", &network.id.clone().unwrap())
             .replace(
                 "%a",
                 &network
-                    .subtype_1
                     .assigned_addresses
                     .iter()
                     .nth(0)
@@ -171,7 +170,7 @@ impl Settings {
         let mut ids = HashSet::new();
 
         for network in &networks {
-            let id = network.subtype_1.id.clone().unwrap();
+            let id = network.id.clone().unwrap();
 
             ids.insert(id.clone());
 
@@ -188,12 +187,12 @@ impl Settings {
             }
 
             if !ids.contains(id) {
-                network.subtype_1.status = Some(crate::app::STATUS_DISCONNECTED.to_string());
+                network.status = Some(crate::app::STATUS_DISCONNECTED.to_string());
                 continue;
             }
 
             self.nets
-                .store_usage(network.subtype_1.port_device_name.clone().unwrap());
+                .store_usage(network.port_device_name.clone().unwrap());
         }
 
         Ok(new)
@@ -229,7 +228,7 @@ impl Settings {
         self.idx_iter()
             .filter(|x| {
                 if let ListFilter::Connected = self.filter() {
-                    self.get(&x).unwrap().subtype_1.status.clone().unwrap() != STATUS_DISCONNECTED
+                    self.get(&x).unwrap().status.clone().unwrap() != STATUS_DISCONNECTED
                 } else {
                     true
                 }

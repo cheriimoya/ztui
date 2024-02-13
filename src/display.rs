@@ -142,8 +142,8 @@ fn dialog_flags<B: Backend>(f: &mut Frame<B>, _app: &mut App, network: Network) 
                 Style::default().fg(Color::White),
             )),
             Cell::from(Span::styled(
-                format!("{}", network.subtype_0.allow_dns.unwrap_or_default()),
-                Style::default().fg(if network.subtype_0.allow_dns.unwrap_or_default() {
+                format!("{}", network.allow_dns.unwrap_or_default()),
+                Style::default().fg(if network.allow_dns.unwrap_or_default() {
                     Color::LightGreen
                 } else {
                     Color::LightRed
@@ -156,8 +156,8 @@ fn dialog_flags<B: Backend>(f: &mut Frame<B>, _app: &mut App, network: Network) 
                 Style::default().fg(Color::White),
             )),
             Cell::from(Span::styled(
-                format!("{}", network.subtype_0.allow_default.unwrap_or_default()),
-                Style::default().fg(if network.subtype_0.allow_default.unwrap_or_default() {
+                format!("{}", network.allow_default.unwrap_or_default()),
+                Style::default().fg(if network.allow_default.unwrap_or_default() {
                     Color::LightGreen
                 } else {
                     Color::LightRed
@@ -170,8 +170,8 @@ fn dialog_flags<B: Backend>(f: &mut Frame<B>, _app: &mut App, network: Network) 
                 Style::default().fg(Color::White),
             )),
             Cell::from(Span::styled(
-                format!("{}", network.subtype_0.allow_managed.unwrap_or_default()),
-                Style::default().fg(if network.subtype_0.allow_managed.unwrap_or_default() {
+                format!("{}", network.allow_managed.unwrap_or_default()),
+                Style::default().fg(if network.allow_managed.unwrap_or_default() {
                     Color::LightGreen
                 } else {
                     Color::LightRed
@@ -184,8 +184,8 @@ fn dialog_flags<B: Backend>(f: &mut Frame<B>, _app: &mut App, network: Network) 
                 Style::default().fg(Color::White),
             )),
             Cell::from(Span::styled(
-                format!("{}", network.subtype_0.allow_global.unwrap_or_default()),
-                Style::default().fg(if network.subtype_0.allow_global.unwrap_or_default() {
+                format!("{}", network.allow_global.unwrap_or_default()),
+                Style::default().fg(if network.allow_global.unwrap_or_default() {
                     Color::LightGreen
                 } else {
                     Color::LightRed
@@ -367,7 +367,7 @@ pub fn display_networks<B: Backend>(
             };
 
             if let ListFilter::Connected = lock.filter() {
-                if v.subtype_1.status.clone().unwrap() == STATUS_DISCONNECTED {
+                if v.status.clone().unwrap() == STATUS_DISCONNECTED {
                     return None;
                 }
             }
@@ -378,12 +378,12 @@ pub fn display_networks<B: Backend>(
                     Style::default().fg(Color::LightCyan),
                 )),
                 Cell::from(Span::styled(
-                    v.subtype_1.name.clone().unwrap_or_default(),
+                    v.name.clone().unwrap_or_default(),
                     Style::default().fg(Color::Cyan),
                 )),
                 Cell::from(Span::styled(
-                    v.subtype_1.status.clone().unwrap(),
-                    Style::default().fg(match v.subtype_1.status.clone().unwrap().as_str() {
+                    v.status.clone().unwrap(),
+                    Style::default().fg(match v.status.clone().unwrap().as_str() {
                         "OK" => Color::LightGreen,
                         "REQUESTING_CONFIGURATION" => Color::LightYellow,
                         STATUS_DISCONNECTED => Color::LightRed,
@@ -391,14 +391,14 @@ pub fn display_networks<B: Backend>(
                     }),
                 )),
                 Cell::from(Span::styled(
-                    v.subtype_1.assigned_addresses.join(", "),
+                    v.assigned_addresses.join(", "),
                     Style::default().fg(Color::LightGreen),
                 )),
                 Cell::from(Span::styled(
                     if let Some(s) = lock
                         .nets
                         .clone()
-                        .get_usage(v.subtype_1.port_device_name.clone().unwrap())
+                        .get_usage(v.port_device_name.clone().unwrap())
                     {
                         s
                     } else {
