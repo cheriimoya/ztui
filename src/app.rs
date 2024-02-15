@@ -467,15 +467,16 @@ impl App {
                                 }
                             }
                         }
-                        x => {
-                            if let Some(net) = lock.get_network_by_pos(
-                                lock.network_state.selected().unwrap_or_default(),
-                            ) {
-                                if let Some(s) = lock.user_config().command_for_network(x, net) {
-                                    App::run_command(terminal, true, s)?;
-                                }
-                            }
+                        'n' => {
+                            let network = crate::client::generate_new_network();
+                            // let network = crate::client::get_controller_status();
+                            App::run_command(
+                                terminal,
+                                false,
+                                format!("echo '{:?}'", network),
+                            )?;
                         }
+                        x => { }
                     },
                     _ => {}
                 },

@@ -14,7 +14,7 @@ use http::{HeaderMap, HeaderValue};
 use tokio::sync::mpsc;
 use zerotier_central_api::types::Network as CentralNetwork;
 use zerotier_central_api::{types::Member, Client, ResponseValue};
-use zerotier_one_api::types::Network;
+use zerotier_one_api::types::{ Network, ControllerNetwork };
 
 use crate::app::NetworkFlag;
 
@@ -470,3 +470,57 @@ pub fn sync_apply_network_rules(
         }
     }
 }
+
+pub fn generate_new_network() -> Result<ResponseValue<ControllerNetwork>, zerotier_one_api::Error> {
+    let t = tokio::runtime::Builder::new_multi_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+    let (s, mut r) = mpsc::unbounded_channel();
+
+    t.spawn(async move {
+        let client = local_client_from_file(authtoken_path(None)).unwrap();
+        let status = client.get_status().await.unwrap().into_inner();
+        s.send(
+            client
+                .generate_controller_network(
+                    &format!("{}______", &status.address.unwrap()),
+                    &ControllerNetwork {
+                        capabilities: Vec::new(),
+                        creation_time: None,
+                        enable_broadcast: None,
+                        id: None,
+                        ip_assignment_pools: Vec::new(),
+                        mtu: None,
+                        multicast_limit: None,
+                        name: None,
+                        nwid: None,
+                        objtype: None,
+                        private: None,
+                        remote_trace_level: None,
+                        remote_trace_target: None,
+                        revision: None,
+                        routes: Vec::new(),
+                        rules: Vec::new(),
+                        tags: Vec::new(),
+                        v4_assign_mode: None,
+                        v6_assign_mode: None,
+                    },
+                )
+                .await,
+        )
+    });
+
+    let res: Result<ResponseValue<ControllerNetwork>, zerotier_one_api::Error>;
+
+    loop {
+        if let Ok(r) = r.try_recv() {
+            res = r;
+            break;
+        }
+    }
+
+    t.shutdown_background();
+    res
+}
+
